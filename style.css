@@ -19,6 +19,7 @@ html {
   float: right;
   border: 1px solid grey;
   line-height: 2em;
+  display: none;
 }
 
 #container {
@@ -31,5 +32,4 @@ html {
 #fecha {
     vertical-align: top;
     float: right;
-
 }

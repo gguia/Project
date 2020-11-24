@@ -3,85 +3,9 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--<script src="scripts.js"></script>-->
+    
     <link rel="stylesheet" href="style.css">
-    <script>
-        const bef = document.getElementById("topodir");
-        const aft = document.getElementById("topodir2");
-
-        onerror = handleErr;
-        var txt = "";
-        function handleErr(msg, url, l) {
-            txt = "There was an error on this page.\n\n";
-            txt += "Error: " + msg + "\n";
-            txt += "URL: " + url + "\n";
-            txt += "Line: " + l + "\n\n";
-            txt += "Click OK to continue.\n\n";
-            alert(txt);
-            return true;
-        }
-
-        function regist() {
-            const despues = document.getElementById("container");
-            despues.style.display = "block";
-        }
-
-        function registre() {
-            let userx = document.getElementById("name").value;
-            let mailx = document.getElementById("email").value;
-            let passx = document.getElementById("passwo").value;
-            let passx2 = document.getElementById("passwo2").value;
-
-
-            if (passx != passx2) {
-                alert("Password\'s don\'t match.")
-                return true;
-            }
-            if (userx.length < 1) {
-                alert("Please fill your username.")
-            }
-            if (mailx.length < 1) {
-                alert("Please write your e-mail.")
-            }
-            if (passx.length < 4) {
-                alert("Please choose a longer password")
-            }
-
-            else {
-                localStorage.setItem("user", userx);
-                localStorage.setItem("email", mailx);
-                localStorage.setItem("password", passx);
-                const despues = document.getElementById("container");
-                despues.style.display = "none";
-                window.setTimeout(window.location.reload(), 2000);
-            }
-        }
-
-        function fechas() {
-            const despues = document.getElementById("container");
-            despues.style.display = "none";
-        }
-
-
-        function logged() {
-            var ouser = document.getElementById("ousername").value;
-            var apassw = document.getElementById("apasse").value;
-            if (ouser = "") {
-                alert("Please enter your User and Password");
-            }
-
-            if (ouser = "" && apassw == "") {
-                bef.style.display = "none";
-                aft.style.display = "block";
-                aft.innerHTML = 'welcome,' + ouser;
-
-            }
-        }
-
-      //  https://www.w3resource.com/javascript/form/email-validation.php   -> Link para validar email
-
-    </script>
-
+    <script src="scripts.js"></script>
 </head>
 <title>
     Your Favorite GBooks Searcher
@@ -100,7 +24,6 @@
                 <button type="submit" id="golog" onclick="logged()">Log in</button>
             </form>
             <a href="=" id="registlink" onclick="regist();return false;">Register</a>
-
         </div>
         <div id="topodir2">
             Welce,
@@ -113,7 +36,7 @@
         </div>
         <div id="container" style="display:none;">
             <div class="main">
-                <form action="#" onsubmit="registre()">
+                <form id="form1" action="#" onsubmit="registre()">
                     <div id="fecha"><a href="#" id="fechar" onclick="fechas()">[close]</a></div>
                     <h2>Complete your Registration</h2>
                     <label>Username :</label>
