@@ -1,0 +1,35 @@
+html {
+  box-sizing: border-box;
+}
+
+#todos {
+  width: 100%;
+}
+
+#topodir {
+  width: 25%;
+  vertical-align: top;
+  float: right;
+  border: 1px solid grey;
+  line-height: 2em;
+}
+#topodir2 {
+  width: 25%;
+  vertical-align: top;
+  float: right;
+  border: 1px solid grey;
+  line-height: 2em;
+}
+
+#container {
+  width: 40%;
+  margin: auto;
+  border: 1px solid whitesmoke;
+  text-align: center;
+}
+
+#fecha {
+    vertical-align: top;
+    float: right;
+
+}
