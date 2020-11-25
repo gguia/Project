@@ -1,7 +1,4 @@
 
-var usernames = JSON.parse(localStorage.getItem("user"));
-var passwords = JSON.parse(localStorage.getItem("password"));
-var emails = JSON.parse(localStorage.getItem("email"));
 
 onerror = handleErr;
 var txt = "";
@@ -41,6 +38,21 @@ function registre() { //regista
     let mailx = document.getElementById("email").value;
     let passx = document.getElementById("passwo").value;
     let passx2 = document.getElementById("passwo2").value;
+    var usernames = JSON.parse(localStorage.getItem("user"));
+    var passwords = JSON.parse(localStorage.getItem("password"));
+    var emails = JSON.parse(localStorage.getItem("email"));
+
+    if (usernames == null) {
+        usernames = []
+    }
+
+    if (passwords == null) {
+        passwords = [];
+    }
+
+    if (emails == null) {
+        emails = [];
+    }
 
     ValidateEmail(mailx);
 
@@ -80,12 +92,22 @@ function fechas() {
     despues.style.display = "none";
 }
 
-
 function logged() {
     var ouser = document.getElementById("ousername").value;
     var apassw = document.getElementById("apasse").value;
-    const bef = document.getElementById("topodir");
-    const aft = document.getElementById("topodir2");
+    
+    var usernames = JSON.parse(localStorage.getItem("user"));
+    var passwords = JSON.parse(localStorage.getItem("password"));
+    var emails = JSON.parse(localStorage.getItem("email"));
+
+    console.log(usernames)
+    if (usernames == null) {
+        usernames = [];
+    }
+
+    if (passwords == null) {
+        passwords = [];
+    }
 
     if (ouser == "" || apassw == "") {
         alert("Please enter your User and Password");
@@ -99,8 +121,7 @@ function logged() {
     if (userindex !== -1) {
         if (passwords[userindex] == apassw) {
 
-            bef.style.display = "none";
-            aft.style.display = "block";
+            afterlogin(ouser);
 
         }
         else {
@@ -112,11 +133,20 @@ function logged() {
     }
 }
 
+function afterlogin(valor) {
+    const bef = document.getElementById("topodir");
+    const aft = document.getElementById("topodir2");
+    bef.style.display = "none";
+    aft.style.display = "block";
+
+    aft.innerHTML = "Welcome, " + valor + 
+
+}
 
 
-    /*if (ouser == "" && apassw == "") {
-        bef.style.display = "none";
-        aft.style.display = "block";
-        aft.innerHTML = 'welcome,' + ouser;
+/*if (ouser == "" && apassw == "") {
+    bef.style.display = "none";
+    aft.style.display = "block";
+    aft.innerHTML = 'welcome,' + ouser;
 
-    }*/
+}*/

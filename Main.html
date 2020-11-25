@@ -3,9 +3,22 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <link rel="stylesheet" href="style.css">
     <script src="scripts.js"></script>
+    <script>
+        onerror = handleErr;
+        var txt = "";
+        function handleErr(msg, url, l) {
+            txt = "There was an error on this page.\n\n";
+            txt += "Error: " + msg + "\n";
+            txt += "URL: " + url + "\n";
+            txt += "Line: " + l + "\n\n";
+            txt += "Click OK to continue.\n\n";
+            alert(txt);
+            return true;
+        }
+    </script>
 </head>
 <title>
     Your Favorite GBooks Searcher
