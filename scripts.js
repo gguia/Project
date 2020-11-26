@@ -138,10 +138,13 @@ function afterlogin(valor) {
     const aft = document.getElementById("topodir2");
     bef.style.display = "none";
     aft.style.display = "block";
+    var d = new Date();
+    
 
-    aft.innerHTML = "Welcome, " + valor + 
+    aft.innerHTML = "Welcome, " + valor + "<br>" + d ;
 
 }
+
 
 
 /*if (ouser == "" && apassw == "") {
