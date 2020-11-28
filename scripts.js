@@ -1,4 +1,4 @@
-
+var timer;
 
 onerror = handleErr;
 var txt = "";
@@ -11,6 +11,7 @@ function handleErr(msg, url, l) {
     alert(txt);
     return true;
 }
+
 
 function regist() {
     const despues = document.getElementById("container");
@@ -55,6 +56,10 @@ function registre() { //regista
     }
 
     ValidateEmail(mailx);
+    /* while (!ValidateEmail(mailx)) {
+         mailx = null;
+         regist();
+     }*/
 
     if (passx != passx2) {
         alert("Password\'s don\'t match.")
@@ -93,14 +98,20 @@ function fechas() {
 }
 
 function logged() {
+    /*var golog = document.getElementById(golog);
+    golog.addEventListener("click", function(){
+        document.getElementById("demo").innerHTML = "Hello World";
+      });*/
+    //preventDefault()
+
     var ouser = document.getElementById("ousername").value;
     var apassw = document.getElementById("apasse").value;
-    
     var usernames = JSON.parse(localStorage.getItem("user"));
     var passwords = JSON.parse(localStorage.getItem("password"));
     var emails = JSON.parse(localStorage.getItem("email"));
 
-    console.log(usernames)
+    console.log(usernames);
+
     if (usernames == null) {
         usernames = [];
     }
@@ -139,14 +150,107 @@ function afterlogin(valor) {
     bef.style.display = "none";
     aft.style.display = "block";
 
-    aft.innerHTML = "Welcome, " + valor + 
+    aft.innerHTML = "Welcome, " + valor;
+
+    // setTimeout(() => {  location.reload(); }, 3000);  -  Caso o de baixo não funcione, este faz reload
+
+    //timer = setTimeout(function () { location.reload() }, 300000);
+
+    corporesearch();
+}
+
+function corporesearch() {
+    var mpage = document.getElementById("mpage");
+    mpage.style.display = "block";
+    var seach = document.getElementById("searchbar");
+    seach.addEventListener('keypress', function (e) {
+        console.log(e.key);
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            clearTimeout(timer);
+            timer = setTimeout(function () { location.reload() }, 300000);
+            dosearch();
+        }
+    });
+    //seach.addEventListener('submit', dosearch()); - Inutilizado, o submit dá refresh à página;
 
 }
 
+function hideorshow() {
+    var saywhat = document.getElementById("apasse");
+    if (saywhat.type === "password") {
+        saywhat.type = "text";
+    } else {
+        saywhat.type = "password";
+    }
+}
 
-/*if (ouser == "" && apassw == "") {
-    bef.style.display = "none";
-    aft.style.display = "block";
-    aft.innerHTML = 'welcome,' + ouser;
+function dosearch() {
+    var thesearch = document.getElementById("searchbar").value;
+    var resultfeed = document.getElementById("contents");
+    if (thesearch == "") {
+        alert("Please enter something in the field");
+    }
+    else {
+        var url = "";
+        var img = "";
+        var title = "";
+        var author = "";
+        var readmore = "";
 
-}*/
+        httpGetAsync("https://www.googleapis.com/books/v1/volumes?q=" + thesearch, volumeInfo);
+
+    }
+    console.log(contents);
+    console.log(resultfeed);
+    resultfeed.innerHTML = "";
+
+    /*while (document.getElementById('contents').firstChild) {
+        document.getElementById('contents').removeChild(document.getElementById('contents').firstChild);
+    } ------ Opção para limpar o contents */ 
+};
+
+
+
+function volumeInfo(responseJSON) {
+    contents = document.getElementById('contents');
+    response = JSON.parse(responseJSON);
+
+    for (i = 0; i < response.items.length; i++) {
+        title = document.createElement('h5');
+        contents.appendChild(title);
+        title.outerHTML = '<h5 class="center-align white-text">' + response.items[i].volumeInfo.title + '</h5>';
+        author = document.createElement('h5');
+        contents.appendChild(author);
+        author.outerHTML = '<h5 class="center-align white-text"> By:' + response.items[i].volumeInfo.authors + '</h5>';
+        img = document.createElement('img');
+        contents.appendChild(img);
+        url = response.items[i].volumeInfo.imageLinks ? response.items[i].volumeInfo.imageLinks.thumbnail : "https://upload.wikimedia.org/wikipedia/commons/b/b8/Indian_Election_Symbol_Book.svg";
+        img.setAttribute('src', url);
+        breakLn = document.createElement('br');
+        contents.appendChild(breakLn);
+        breakLn = document.createElement('br');
+        contents.appendChild(breakLn);
+        readmore = document.createElement('a');
+        contents.appendChild(readmore);
+        readmore.outerHTML = '<a href=' + response.items[i].volumeInfo.infoLink + '><button id="imagebutton" class="btn red">Read More</button></a>';
+
+    }
+}
+
+function httpGet(theUrl) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", theUrl, false); // false for synchronous request
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
+}
+
+function httpGetAsync(theUrl, callback) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous request
+    xmlHttp.send(null);
+}

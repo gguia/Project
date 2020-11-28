@@ -33,3 +33,13 @@ html {
     vertical-align: top;
     float: right;
 }
+
+#mpage {
+  border: 1px solid black;
+  display: none;
+}
+
+img {
+  width: 80px;
+  height: 80px;
+}
