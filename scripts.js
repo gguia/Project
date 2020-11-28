@@ -109,7 +109,7 @@ function logged() {
     var usernames = JSON.parse(localStorage.getItem("user"));
     var passwords = JSON.parse(localStorage.getItem("password"));
     var emails = JSON.parse(localStorage.getItem("email"));
-
+    
     console.log(usernames);
 
     if (usernames == null) {
@@ -148,14 +148,19 @@ function afterlogin(valor) {
     const bef = document.getElementById("topodir");
     const aft = document.getElementById("topodir2");
     bef.style.display = "none";
-    aft.style.display = "block";
+    aft.style.display = "block";    
+    var d = formatDate(new Date());
 
-    aft.innerHTML = "Welcome, " + valor;
+    var lastStoredLogin = localStorage.getItem('lastlogin') ? localStorage.getItem('lastlogin') : "never! "
+
+    aft.innerHTML = "Welcome, " + valor + "<br>" + "logged in: " + d + "<br>" + "last login was at: " + lastStoredLogin;
 
     // setTimeout(() => {  location.reload(); }, 3000);  -  Caso o de baixo não funcione, este faz reload
+    timer = setTimeout(function () { location.reload() }, 300000);
+    
+    var lastlogin = formatDate(new Date());
 
-    //timer = setTimeout(function () { location.reload() }, 300000);
-
+    localStorage.setItem("lastlogin", lastlogin);
     corporesearch();
 }
 
@@ -207,9 +212,8 @@ function dosearch() {
 
     /*while (document.getElementById('contents').firstChild) {
         document.getElementById('contents').removeChild(document.getElementById('contents').firstChild);
-    } ------ Opção para limpar o contents */ 
+    } ------ Opção para limpar o contents */
 };
-
 
 
 function volumeInfo(responseJSON) {
@@ -254,3 +258,17 @@ function httpGetAsync(theUrl, callback) {
     xmlHttp.open("GET", theUrl, true); // true for asynchronous request
     xmlHttp.send(null);
 }
+
+function dateComponentPad(value) {
+    var format = String(value);
+
+    return format.length < 2 ? '0' + format : format;
+}
+
+function formatDate(date) {
+    var datePart = [date.getFullYear(), date.getMonth() + 1, date.getDate()].map(dateComponentPad);
+    var timePart = [date.getHours(), date.getMinutes(), date.getSeconds()].map(dateComponentPad);
+
+    return datePart.join('-') + ' ' + timePart.join(':');
+}
+
