@@ -12,6 +12,7 @@ function handleErr(msg, url, l) {
     return true;
 }
 
+const favoriteArray = [];
 
 function regist() {
     const despues = document.getElementById("container");
@@ -109,7 +110,7 @@ function logged() {
     var usernames = JSON.parse(localStorage.getItem("user"));
     var passwords = JSON.parse(localStorage.getItem("password"));
     var emails = JSON.parse(localStorage.getItem("email"));
-    
+
     console.log(usernames);
 
     if (usernames == null) {
@@ -148,7 +149,7 @@ function afterlogin(valor) {
     const bef = document.getElementById("topodir");
     const aft = document.getElementById("topodir2");
     bef.style.display = "none";
-    aft.style.display = "block";    
+    aft.style.display = "block";
     var d = formatDate(new Date());
 
     var lastStoredLogin = localStorage.getItem('lastlogin') ? localStorage.getItem('lastlogin') : "never! "
@@ -157,7 +158,7 @@ function afterlogin(valor) {
 
     // setTimeout(() => {  location.reload(); }, 3000);  -  Caso o de baixo não funcione, este faz reload
     timer = setTimeout(function () { location.reload() }, 300000);
-    
+
     var lastlogin = formatDate(new Date());
 
     localStorage.setItem("lastlogin", lastlogin);
@@ -206,8 +207,7 @@ function dosearch() {
         httpGetAsync("https://www.googleapis.com/books/v1/volumes?q=" + thesearch, volumeInfo);
 
     }
-    console.log(contents);
-    console.log(resultfeed);
+
     resultfeed.innerHTML = "";
 
     /*while (document.getElementById('contents').firstChild) {
@@ -221,26 +221,35 @@ function volumeInfo(responseJSON) {
     response = JSON.parse(responseJSON);
 
     for (i = 0; i < response.items.length; i++) {
+        bookdivision = document.createElement('div');
+        contents.appendChild(bookdivision);
+        bookdivision.setAttribute("id", "book" + i);
+        //bookdivision.style.display = "block";  NOT NECESSARYYY
+        //bookdivision.style.border = "1px solid black";
+        console.log(bookdivision);
         title = document.createElement('h5');
-        contents.appendChild(title);
+        bookdivision.appendChild(title);
         title.outerHTML = '<h5 class="center-align white-text">' + response.items[i].volumeInfo.title + '</h5>';
         author = document.createElement('h5');
-        contents.appendChild(author);
+        bookdivision.appendChild(author);
         author.outerHTML = '<h5 class="center-align white-text"> By:' + response.items[i].volumeInfo.authors + '</h5>';
         img = document.createElement('img');
-        contents.appendChild(img);
+        bookdivision.appendChild(img);
         url = response.items[i].volumeInfo.imageLinks ? response.items[i].volumeInfo.imageLinks.thumbnail : "https://upload.wikimedia.org/wikipedia/commons/b/b8/Indian_Election_Symbol_Book.svg";
         img.setAttribute('src', url);
         breakLn = document.createElement('br');
-        contents.appendChild(breakLn);
+        bookdivision.appendChild(breakLn);
         breakLn = document.createElement('br');
-        contents.appendChild(breakLn);
+        bookdivision.appendChild(breakLn);
         readmore = document.createElement('a');
-        contents.appendChild(readmore);
+        bookdivision.appendChild(readmore);
         readmore.outerHTML = '<a href=' + response.items[i].volumeInfo.infoLink + '><button id="imagebutton" class="btn red">Read More</button></a>';
         addfav = document.createElement('button');
-        addfav.outerHTML = '<button id="favbutton" value="AddFavorite">'
-        contents.appendChild(addfav);
+        bookdivision.appendChild(addfav);
+        addfav.outerHTML = '<button id="favbutton' + i + '">Add Favorite</button>';
+        addfav = document.getElementById("favbutton" + i);
+        bookidd = document.getElementById("book" + i);
+        addfav.addEventListener("click", addfavorite.bind(null, response.items[i], i, bookidd));
     }
 }
 
@@ -274,3 +283,55 @@ function formatDate(date) {
     return datePart.join('-') + ' ' + timePart.join(':');
 }
 
+function addfavorite(addfav, i, bookidd) {
+    favoriteArray.push(addfav);
+    console.log(addfav);
+    console.log(i);
+    console.log(bookidd);
+    favoritediv = document.createElement('div');
+    favoritediv.setAttribute("id", "favdiv" + i);
+    favorites = document.getElementById('favorites');
+    favorites.appendChild(favoritediv);
+    title = document.createElement('h5');
+    favoritediv.appendChild(title);
+    title.outerHTML = '<h5 class="center-align white-text">' + addfav.volumeInfo.title + '</h5>';
+    author = document.createElement('h5');
+    favoritediv.appendChild(author);
+    author.outerHTML = '<h5 class="center-align white-text"> By:' + addfav.volumeInfo.authors + '</h5>';
+    img = document.createElement('img');
+    favoritediv.appendChild(img);
+    url = addfav.volumeInfo.imageLinks ? addfav.volumeInfo.imageLinks.thumbnail : "https://upload.wikimedia.org/wikipedia/commons/b/b8/Indian_Election_Symbol_Book.svg";
+    img.setAttribute('src', url);
+    breakLn = document.createElement('br');
+    favoritediv.appendChild(breakLn);
+    breakLn = document.createElement('br');
+    favoritediv.appendChild(breakLn);
+    readmore = document.createElement('a');
+    favoritediv.appendChild(readmore);
+    readmore.outerHTML = '<a href=' + addfav.volumeInfo.infoLink + '><button id="imagebutton" class="btn red">Read More</button></a>';
+    removfav = document.createElement('button');
+    favoritediv.appendChild(removfav);
+    removfav.outerHTML = '<button id="removbutton' + i + '">Remove Favorite</button>';
+    removex = document.getElementById("removbutton" + i);
+    removex.addEventListener("click", removefavorite.bind(null, i, removex,));
+    listadefavoritos = favorites.getElementsByTagName("div");
+    console.log(listadefavoritos);
+    localStorage.setItem("quefavoritos", JSON.stringify(favoriteArray));
+}
+
+function removefavorite(i, favoritediv) {
+    favoriteArray.splice(i,1);
+    console.log("favdiv"+i);
+    console.log(favoriteArray);
+    odivparaapagar = document.getElementById("favdiv" + i);
+    odivparaapagar.remove();
+    favorites = document.getElementById('favorites');
+    listadefavoritos = favorites.getElementsByTagName("div");
+    console.log(listadefavoritos);
+    localStorage.setItem("quefavoritos", JSON.stringify(favoriteArray));
+}
+
+function mostrafavoritos() {
+    osfavoritosguardados = JSON.parse(localStorage.getItem("quefavoritos"));
+    document.write(osfavoritosguardados);
+}
