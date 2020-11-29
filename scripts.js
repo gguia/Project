@@ -238,7 +238,9 @@ function volumeInfo(responseJSON) {
         readmore = document.createElement('a');
         contents.appendChild(readmore);
         readmore.outerHTML = '<a href=' + response.items[i].volumeInfo.infoLink + '><button id="imagebutton" class="btn red">Read More</button></a>';
-
+        addfav = document.createElement('button');
+        addfav.outerHTML = '<button id="favbutton" value="AddFavorite">'
+        contents.appendChild(addfav);
     }
 }
 
