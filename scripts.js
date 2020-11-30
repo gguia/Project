@@ -12,7 +12,7 @@ function handleErr(msg, url, l) {
     return true;
 }
 
-const favoriteArray = [];
+var favoriteArray = [];
 
 function regist() {
     const despues = document.getElementById("container");
@@ -146,6 +146,7 @@ function logged() {
 }
 
 function afterlogin(valor) {
+    getfavlist();
     const bef = document.getElementById("topodir");
     const aft = document.getElementById("topodir2");
     bef.style.display = "none";
@@ -163,11 +164,16 @@ function afterlogin(valor) {
 
     localStorage.setItem("lastlogin", lastlogin);
     corporesearch();
+
 }
 
 function corporesearch() {
     var mpage = document.getElementById("mpage");
     mpage.style.display = "block";
+
+    var favoritesPointer = document.getElementById("favorites");
+    //favoritesPointer.innerHTML = 
+
     var seach = document.getElementById("searchbar");
     seach.addEventListener('keypress', function (e) {
         console.log(e.key);
@@ -230,6 +236,8 @@ function volumeInfo(responseJSON) {
         title = document.createElement('h5');
         bookdivision.appendChild(title);
         title.outerHTML = '<h5 class="center-align white-text">' + response.items[i].volumeInfo.title + '</h5>';
+        idunico = response.items[i].id;
+        console.log(idunico);
         author = document.createElement('h5');
         bookdivision.appendChild(author);
         author.outerHTML = '<h5 class="center-align white-text"> By:' + response.items[i].volumeInfo.authors + '</h5>';
@@ -249,7 +257,9 @@ function volumeInfo(responseJSON) {
         addfav.outerHTML = '<button id="favbutton' + i + '">Add Favorite</button>';
         addfav = document.getElementById("favbutton" + i);
         bookidd = document.getElementById("book" + i);
-        addfav.addEventListener("click", addfavorite.bind(null, response.items[i], i, bookidd));
+        addfav.addEventListener("click", addfavorite.bind(null, response.items[i], i, bookidd, idunico));
+        bookdivision.style.border = "1px solid greenyellow";
+        bookdivision.style.textAlign = "center";
     }
 }
 
@@ -283,11 +293,24 @@ function formatDate(date) {
     return datePart.join('-') + ' ' + timePart.join(':');
 }
 
-function addfavorite(addfav, i, bookidd) {
-    favoriteArray.push(addfav);
-    console.log(addfav);
+function getfavlist() {
+    aFavList = JSON.parse(localStorage.getItem("favoritosID"));
+    if (aFavList != null) {
+        return aFavList;
+    }
+    else {
+        aFavList = [];
+        return aFavList;
+    }
+}
+
+function addfavorite(addfav, i, bookidd, idunico) {
+    /*favoriteArray.push(bookidd);
     console.log(i);
     console.log(bookidd);
+    console.log(favoriteArray);*/
+    aFavList = getfavlist();
+    aFavList.push(idunico);
     favoritediv = document.createElement('div');
     favoritediv.setAttribute("id", "favdiv" + i);
     favorites = document.getElementById('favorites');
@@ -313,25 +336,47 @@ function addfavorite(addfav, i, bookidd) {
     favoritediv.appendChild(removfav);
     removfav.outerHTML = '<button id="removbutton' + i + '">Remove Favorite</button>';
     removex = document.getElementById("removbutton" + i);
-    removex.addEventListener("click", removefavorite.bind(null, i, removex,));
-    listadefavoritos = favorites.getElementsByTagName("div");
-    console.log(listadefavoritos);
-    localStorage.setItem("quefavoritos", JSON.stringify(favoriteArray));
+    removex.addEventListener("click", removefavorite.bind(null, i, removex, idunico, favoritediv));
+    favoritediv.style.textAlign = "center";
+    
+
+    //listadefavoritos = favorites.getElementsByTagName("div");
+    //console.log(listadefavoritos);
+    /*favoriteArray = JSON.parse(localStorage.getItem("quefavoritos"));
+    if (favoriteArray != null) {
+        favoriteArray.push(bookidd);
+    }
+    else {
+        favoriteArray = [bookidd];
+    }
+    localStorage.setItem("quefavoritos", JSON.stringify(favoriteArray));*/
 }
 
-function removefavorite(i, favoritediv) {
-    favoriteArray.splice(i,1);
-    console.log("favdiv"+i);
-    console.log(favoriteArray);
+function removefavorite(i, favoritediv, idunico) {
+    /*favoriteArray = JSON.parse(localStorage.getItem("quefavoritos"));
+    favoriteArray.splice(i, 1);*/
+
+    console.log("favdiv" + i);
     odivparaapagar = document.getElementById("favdiv" + i);
+    //odivparaapagar.style.display = "none";
     odivparaapagar.remove();
-    favorites = document.getElementById('favorites');
-    listadefavoritos = favorites.getElementsByTagName("div");
-    console.log(listadefavoritos);
-    localStorage.setItem("quefavoritos", JSON.stringify(favoriteArray));
+
+    
+
+
+    /*aFavList = getfavlist();
+    
+    var estaLa = aFavList.indexOf(idunico);       ESTA PARTE ERA PARA GUARDAR OS IDS DOS BOOKS NOS FAVORITOS.
+    console.log(estaLa); 
+    aFavList.splice(estaLa, 1);*/
+
+    // favorites = document.getElementById('favorites');
+    //listadefavoritos = favorites.getElementsByTagName("div");
+    //console.log(listadefavoritos);
+    //localStorage.setItem("quefavoritos", JSON.stringify(favoriteArray));
 }
 
-function mostrafavoritos() {
+/*function mostrafavoritos() {
     osfavoritosguardados = JSON.parse(localStorage.getItem("quefavoritos"));
     document.write(osfavoritosguardados);
-}
+}*/
