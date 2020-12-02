@@ -35,6 +35,28 @@ function ValidateEmail(form1) {
     }
 }
 
+function confirmEmail(mailx, emails) {
+    position = emails.findIndex(emails => emails === mailx);
+
+    if (position != -1) {
+        alert("E-mail already in use");
+        location.reload();
+        return false;
+    }
+
+    if (ValidateEmail(mailx) != true) {
+        location.reload();
+        return false;
+    }
+    else {
+        return true;
+    }
+
+
+    return;
+}
+
+
 function registre() { //regista 
     let userx = document.getElementById("name").value;
     let mailx = document.getElementById("email").value;
@@ -43,6 +65,7 @@ function registre() { //regista
     var usernames = JSON.parse(localStorage.getItem("user"));
     var passwords = JSON.parse(localStorage.getItem("password"));
     var emails = JSON.parse(localStorage.getItem("email"));
+
 
     if (usernames == null) {
         usernames = []
@@ -55,12 +78,6 @@ function registre() { //regista
     if (emails == null) {
         emails = [];
     }
-
-    ValidateEmail(mailx);
-    /* while (!ValidateEmail(mailx)) {
-         mailx = null;
-         regist();
-     }*/
 
     if (passx != passx2) {
         alert("Password\'s don\'t match.")
@@ -79,13 +96,20 @@ function registre() { //regista
         return;
     }
 
-    usernames.push(userx);
-    passwords.push(passx);
-    emails.push(mailx);
+    if (confirmEmail(mailx, emails) == true) {
+        usernames.push(userx);
+        passwords.push(passx);
+        emails.push(mailx);
+        
 
-    localStorage.setItem("user", JSON.stringify(usernames));
-    localStorage.setItem("email", JSON.stringify(emails));
-    localStorage.setItem("password", JSON.stringify(passwords));
+        localStorage.setItem("user", JSON.stringify(usernames));
+        localStorage.setItem("email", JSON.stringify(emails));
+        localStorage.setItem("password", JSON.stringify(passwords));
+        //localStorage.setItem("index", JSON)
+
+    }
+
+
 
     const despues = document.getElementById("container");
     despues.style.display = "none";
@@ -105,7 +129,7 @@ function logged() {
       });*/
     //preventDefault()
 
-    var ouser = document.getElementById("ousername").value;
+    var ouser = document.getElementById("omail").value;
     var apassw = document.getElementById("apasse").value;
     var usernames = JSON.parse(localStorage.getItem("user"));
     var passwords = JSON.parse(localStorage.getItem("password"));
@@ -122,18 +146,18 @@ function logged() {
     }
 
     if (ouser == "" || apassw == "") {
-        alert("Please enter your User and Password");
+        alert("Please enter your E-mail and Password");
         return;
     }
 
-    const userindex = usernames.findIndex(el => el === ouser);
+    const userindex = emails.findIndex(el => el === ouser);
 
     console.log(userindex);
 
     if (userindex !== -1) {
         if (passwords[userindex] == apassw) {
 
-            afterlogin(ouser);
+            afterlogin(usernames[userindex], userindex);
 
         }
         else {
@@ -145,15 +169,18 @@ function logged() {
     }
 }
 
-function afterlogin(valor) {
-    getfavlist();
+function afterlogin(valor, userindex) {
+
+
+
+    getfavlist(userindex);
     const bef = document.getElementById("topodir");
     const aft = document.getElementById("topodir2");
     bef.style.display = "none";
     aft.style.display = "block";
     var d = formatDate(new Date());
 
-    var lastStoredLogin = localStorage.getItem('lastlogin') ? localStorage.getItem('lastlogin') : "never! "
+    var lastStoredLogin = localStorage.getItem('lastlogin' + userindex) ? localStorage.getItem('lastlogin' + userindex) : "never! "
 
     aft.innerHTML = "Welcome, " + valor + "<br>" + "logged in: " + d + "<br>" + "last login was at: " + lastStoredLogin;
 
@@ -162,7 +189,8 @@ function afterlogin(valor) {
 
     var lastlogin = formatDate(new Date());
 
-    localStorage.setItem("lastlogin", lastlogin);
+    localStorage.setItem("lastlogin" + userindex, lastlogin);
+    sessionStorage.setItem("indexuser", userindex);
     corporesearch();
 
 }
@@ -172,7 +200,7 @@ function corporesearch() {
     mpage.style.display = "block";
 
     var favoritesPointer = document.getElementById("favorites");
-    //favoritesPointer.innerHTML = 
+    colocarfavoritos(favoritesPointer);
 
     var seach = document.getElementById("searchbar");
     seach.addEventListener('keypress', function (e) {
@@ -187,6 +215,16 @@ function corporesearch() {
     //seach.addEventListener('submit', dosearch()); - Inutilizado, o submit dá refresh à página;
 
 }
+
+function colocarfavoritos() {
+    userindex = sessionStorage.getItem("indexuser");
+    aFavList = JSON.parse(localStorage.getItem("favoriti" + userindex));
+    for (i=0; i < aFavList.length; i++) {
+        
+    }
+
+}
+
 
 function hideorshow() {
     var saywhat = document.getElementById("apasse");
@@ -220,7 +258,6 @@ function dosearch() {
         document.getElementById('contents').removeChild(document.getElementById('contents').firstChild);
     } ------ Opção para limpar o contents */
 };
-
 
 function volumeInfo(responseJSON) {
     contents = document.getElementById('contents');
@@ -293,8 +330,11 @@ function formatDate(date) {
     return datePart.join('-') + ' ' + timePart.join(':');
 }
 
-function getfavlist() {
-    aFavList = JSON.parse(localStorage.getItem("favoritosID"));
+function getfavlist(userindex) {
+
+
+
+    aFavList = JSON.parse(localStorage.getItem("favoriti" + userindex));
     if (aFavList != null) {
         return aFavList;
     }
@@ -302,6 +342,8 @@ function getfavlist() {
         aFavList = [];
         return aFavList;
     }
+
+
 }
 
 function addfavorite(addfav, i, bookidd, idunico) {
@@ -309,8 +351,10 @@ function addfavorite(addfav, i, bookidd, idunico) {
     console.log(i);
     console.log(bookidd);
     console.log(favoriteArray);*/
-    aFavList = getfavlist();
+    userindex = sessionStorage.getItem("indexuser");
+    aFavList = getfavlist(userindex);
     aFavList.push(idunico);
+    localStorage.setItem("favoriti"+ userindex, JSON.stringify(aFavList));
     favoritediv = document.createElement('div');
     favoritediv.setAttribute("id", "favdiv" + i);
     favorites = document.getElementById('favorites');
@@ -336,9 +380,9 @@ function addfavorite(addfav, i, bookidd, idunico) {
     favoritediv.appendChild(removfav);
     removfav.outerHTML = '<button id="removbutton' + i + '">Remove Favorite</button>';
     removex = document.getElementById("removbutton" + i);
-    removex.addEventListener("click", removefavorite.bind(null, i, removex, idunico, favoritediv));
+    removex.addEventListener("click", removefavorite.bind(null, i, removex, idunico, favoritediv, userindex));
     favoritediv.style.textAlign = "center";
-    
+
 
     //listadefavoritos = favorites.getElementsByTagName("div");
     //console.log(listadefavoritos);
@@ -353,15 +397,19 @@ function addfavorite(addfav, i, bookidd, idunico) {
 }
 
 function removefavorite(i, favoritediv, idunico) {
-    /*favoriteArray = JSON.parse(localStorage.getItem("quefavoritos"));
-    favoriteArray.splice(i, 1);*/
+    
+    userindex = sessionStorage.getItem("indexuser");
+    aFavList = getfavlist(userindex);
+    var num = aFavList.findIndex(e => e, idunico);
+    aFavlist = aFavList.splice(num, 1);
+    localStorage.setItem("favoriti"+ userindex, JSON.stringify(aFavList));
 
     console.log("favdiv" + i);
     odivparaapagar = document.getElementById("favdiv" + i);
     //odivparaapagar.style.display = "none";
     odivparaapagar.remove();
 
-    
+
 
 
     /*aFavList = getfavlist();
