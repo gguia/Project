@@ -173,7 +173,7 @@ function afterlogin(valor, userindex) {
 
 
 
-    getfavlist(userindex);
+    //getfavlist(userindex); - inutilizado
     const bef = document.getElementById("topodir");
     const aft = document.getElementById("topodir2");
     bef.style.display = "none";
@@ -199,8 +199,8 @@ function corporesearch() {
     var mpage = document.getElementById("mpage");
     mpage.style.display = "block";
 
-    var favoritesPointer = document.getElementById("favorites");
-    colocarfavoritos(favoritesPointer);
+    /*var favoritesPointer = document.getElementById("favorites");
+    colocarfavoritos(favoritesPointer); - inutilizado*/
 
     var seach = document.getElementById("searchbar");
     seach.addEventListener('keypress', function (e) {
@@ -270,6 +270,7 @@ function volumeInfo(responseJSON) {
         //bookdivision.style.display = "block";  NOT NECESSARYYY
         //bookdivision.style.border = "1px solid black";
         console.log(bookdivision);
+        bookdivision.style.background = "#e3e3e3";
         title = document.createElement('h5');
         bookdivision.appendChild(title);
         title.outerHTML = '<h5 class="center-align white-text">' + response.items[i].volumeInfo.title + '</h5>';
@@ -361,6 +362,7 @@ function addfavorite(addfav, i, bookidd, idunico) {
     favorites.appendChild(favoritediv);
     title = document.createElement('h5');
     favoritediv.appendChild(title);
+    favoritediv.style.background = "#e3e3e3";
     title.outerHTML = '<h5 class="center-align white-text">' + addfav.volumeInfo.title + '</h5>';
     author = document.createElement('h5');
     favoritediv.appendChild(author);

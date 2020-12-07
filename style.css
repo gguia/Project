@@ -1,5 +1,6 @@
 html {
   box-sizing: border-box;
+  background-image: url("fundo.jpg");
 }
 * {
   padding: 1px;
@@ -14,6 +15,7 @@ html {
   float: right;
   border: 1px solid grey;
   line-height: 2em;
+  background-color: grey;
 }
 #topodir2 {
   width: 35%;
@@ -22,6 +24,7 @@ html {
   border: 1px solid grey;
   line-height: 2em;
   display: none;
+  background-color: grey;
 }
 
 #container {
@@ -29,6 +32,7 @@ html {
   margin: auto;
   border: 1px solid whitesmoke;
   text-align: center;
+  background-color: whitesmoke;
 }
 
 #fecha {
@@ -53,9 +57,23 @@ img {
   border: 1px solid black;
   float: right;
   vertical-align: center;
+  margin: auto;
+  width: 40%;
+  font-style: italic;
+  text-align: center;
 }
 
 #contents {
   width: 49%;
   border: 1px solid pink;
+}
+
+#topoesq {
+  color: #3b3b3b;
+  font-family: 'Raleway',sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 12px;
+  margin: 0 0 4px;
+  text-transform: uppercase; 
 }
