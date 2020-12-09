@@ -113,7 +113,7 @@ function registre() { //regista
 
     const despues = document.getElementById("container");
     despues.style.display = "none";
-    window.setTimeout(window.location.reload(), 2000);
+    window.setTimeout(window.location.reload(), 300000);
 
 }
 
@@ -185,7 +185,7 @@ function afterlogin(valor, userindex) {
     aft.innerHTML = "Welcome, " + valor + "<br>" + "logged in: " + d + "<br>" + "last login was at: " + lastStoredLogin;
 
     // setTimeout(() => {  location.reload(); }, 3000);  -  Caso o de baixo não funcione, este faz reload
-    timer = setTimeout(function () { location.reload() }, 300000);
+    timer = setTimeout(function () { location.reload() }, 5000);
 
     var lastlogin = formatDate(new Date());
 
